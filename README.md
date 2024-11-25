@@ -54,7 +54,7 @@ Para ejecutar la aplicación, simplemente corre el siguiente comando:
 ```bash
 npm start
 ```
-Este comando ejecutará la aplicación Express en el puerto configurado (por defecto, será localhost:3000).
+Este comando ejecutará la aplicación Express en el puerto configurado (por defecto, será localhost:3001).
 
 ### 6. Subir una imagen
 Para subir una imagen a la cola de impresión, realiza una solicitud POST al endpoint /print con una imagen en el cuerpo de la solicitud.
@@ -62,7 +62,7 @@ Para subir una imagen a la cola de impresión, realiza una solicitud POST al end
 Ejemplo de uso con curl:
 
 ```bash
-curl -X POST -F "image=@/ruta/a/tu/imagen.png" http://localhost:3000/print
+curl -X POST -F "image=@/ruta/a/tu/imagen.png" http://localhost:3001/print
 ```
 ## Detalles sobre el submódulo catprinter
 El submódulo catprinter contiene los scripts de Python que interactúan directamente con la impresora. Estos scripts son responsables de manejar la conexión Bluetooth con la impresora y de aplicar efectos de dithering en las imágenes antes de enviarlas para impresión.
