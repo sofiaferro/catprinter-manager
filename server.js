@@ -15,6 +15,5 @@ app.use('/', indexRoutes);
 app.use('/health-check', healthCheckRoutes);
 app.use('/api', printRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export the app for Vercel to handle
+module.exports = app;
