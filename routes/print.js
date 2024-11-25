@@ -5,13 +5,13 @@ const path = require('path');
 const fs = require('fs').promises;
 const printService = require('../services/printService');
 
-// Configure multer to use the /tmp directory for file uploads
+// Configurar multer para la carga de archivos
 const upload = multer({
-  dest: '/tmp',
-  limits: { fileSize: 10 * 1024 * 1024 }, // Limit of 10MB
+  dest: path.join(__dirname, '..', 'child', 'temp'),
+  limits: { fileSize: 10 * 1024 * 1024 }, // Límite de 10MB
 });
 
-// Simple print queue management
+// Gestión simple de la cola
 let printQueue = [];
 let isPrinting = false;
 
@@ -22,15 +22,15 @@ router.post('/print', upload.single('image'), async (req, res) => {
     }
 
     const { originalname, path: tempPath } = req.file;
-    const imagePath = path.join('/tmp', originalname);
+    const imagePath = path.join(__dirname, '..', 'child', originalname);
 
-    // Move the file from the temporary directory to the desired location
+    // Mover el archivo del directorio temporal al directorio de catprinter
     await fs.rename(tempPath, imagePath);
 
-    // Add to the print queue
+    // Agregar a la cola de impresión
     printQueue.push({ name: originalname, path: imagePath });
 
-    // Start printing if not already in progress
+    // Comenzar la impresión si no hay otra en curso
     if (!isPrinting) {
       processPrintQueue();
     }
@@ -58,7 +58,7 @@ async function processPrintQueue() {
   } catch (error) {
     console.error(`Error al imprimir ${name}:`, error);
   } finally {
-    // Clean up the file
+    // Limpiar el archivo
     try {
       await fs.unlink(imagePath);
       console.log(`Archivo temporal eliminado: ${imagePath}`);
@@ -66,7 +66,7 @@ async function processPrintQueue() {
       console.error(`Error al eliminar el archivo ${imagePath}:`, unlinkError);
     }
 
-    // Process the next in the queue
+    // Procesar el siguiente en la cola
     processPrintQueue();
   }
 }
