@@ -6,9 +6,10 @@ Este repositorio gestiona el envío de imágenes a una impresora utilizando el s
 
 Asegúrate de tener los siguientes elementos instalados en tu sistema:
 
-- **Node.js** (versión 14 o superior)
-- **Python** (versión 3.6 o superior)
+- **Node.js** (versión 18)
+- **Python** (versión 3.11.0)
 - **Dependencias de Python** requeridas por el submódulo `catprinter`
+- **Bluetooth habilitado** para interactuar con la impresora.
 
 ## Instalación
 
@@ -17,7 +18,7 @@ Asegúrate de tener los siguientes elementos instalados en tu sistema:
 Primero, clona este repositorio y asegúrate de inicializar el submódulo de `catprinter`.
 
 ```bash
-git clone --recurse-submodules https://github.com/tu_usuario/catprinter-manager.git
+git clone --recurse-submodules https://github.com/sofiaferro/catprinter-manager.git
 ```
 Si ya has clonado el repositorio sin el submódulo, puedes inicializarlo manualmente con:
 
@@ -32,15 +33,26 @@ Dirígete al directorio del proyecto y ejecuta el siguiente comando para instala
 ```bash
 npm install
 ```
-### 3. Instalar dependencias de Python
-El submódulo catprinter requiere un entorno de Python para ejecutar scripts que interactúan con la impresora. Asegúrate de tener Python y las dependencias necesarias instaladas en tu máquina.
+### 3. Configurar y activar el entorno virtual de Python
 
-Navega al directorio child (submódulo catprinter):
+El submódulo `catprinter` requiere un entorno virtual para gestionar las dependencias de Python. Navega al directorio child, crea un entorno virtual y actívalo:
 
 ```bash
 cd child
+python3 -m venv venv
+source venv/bin/activate  # Para Linux/MacOS
 ```
-Instala las dependencias de Python especificadas en el requirements.txt del submódulo:
+Para usuarios de Windows, usa:
+
+```bash
+venv\Scripts\activate.bat
+```
+
+### 4. Instala las dependencias de Python 
+Con el entorno virtual activado, instala las dependencias necesarias:
+
+bash
+Copiar código
 ```bash
 pip install -r requirements.txt
 ```
@@ -54,7 +66,7 @@ Para ejecutar la aplicación, simplemente corre el siguiente comando:
 ```bash
 npm start
 ```
-Este comando ejecutará la aplicación Express en el puerto configurado (por defecto, será localhost:3001).
+Este comando ejecutará la aplicación Express en el puerto configurado (por defecto, será localhost:8080).
 
 ### 6. Subir una imagen
 Para subir una imagen a la cola de impresión, realiza una solicitud POST al endpoint /print con una imagen en el cuerpo de la solicitud.
@@ -62,7 +74,7 @@ Para subir una imagen a la cola de impresión, realiza una solicitud POST al end
 Ejemplo de uso con curl:
 
 ```bash
-curl -X POST -F "image=@/ruta/a/tu/imagen.png" http://localhost:3001/print
+curl -X POST -F "image=@/ruta/a/tu/imagen.png" http://localhost:8080/print
 ```
 ## Detalles sobre el submódulo catprinter
 El submódulo catprinter contiene los scripts de Python que interactúan directamente con la impresora. Estos scripts son responsables de manejar la conexión Bluetooth con la impresora y de aplicar efectos de dithering en las imágenes antes de enviarlas para impresión.
@@ -78,7 +90,7 @@ Esto descargará cualquier cambio nuevo realizado en el submódulo desde su repo
 
 ## Estructura del Proyecto
 ```plaintext
-Printer-Manager/
+catprinter-Manager/
 │
 ├── child/                # Submódulo `catprinter` con los scripts de Python
 │   ├── catprinter/       # Archivos de `catprinter`
