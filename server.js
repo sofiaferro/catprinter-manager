@@ -9,7 +9,7 @@ const printRoutes = require('./routes/print');
 const app = express();
 app.use(bodyParser.json());
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 app.use('/', indexRoutes);
 app.use('/health-check', healthCheckRoutes);
