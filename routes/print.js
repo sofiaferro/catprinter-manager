@@ -5,10 +5,9 @@ const path = require('path');
 const fs = require('fs').promises;
 const printService = require('../services/printService');
 
-// Configure multer to use the /tmp directory for file uploads
 const upload = multer({
-  dest: '/tmp',
-  limits: { fileSize: 10 * 1024 * 1024 }, // Limit of 10MB
+  dest: path.join(__dirname, 'tmp'),
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 // Simple print queue management
@@ -58,14 +57,6 @@ async function processPrintQueue() {
   } catch (error) {
     console.error(`Error al imprimir ${name}:`, error);
   } finally {
-    // Clean up the file
-    try {
-      await fs.unlink(imagePath);
-      console.log(`Archivo temporal eliminado: ${imagePath}`);
-    } catch (unlinkError) {
-      console.error(`Error al eliminar el archivo ${imagePath}:`, unlinkError);
-    }
-
     // Process the next in the queue
     processPrintQueue();
   }
