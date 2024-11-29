@@ -8,9 +8,6 @@ async function printImage(imageName, imagePath) {
     const pythonExecutable = process.platform === 'win32' ? 'python' : 'python3';
     const scriptPath = path.join(catprinterDir, 'print.py');
 
-    console.log(`Executing: ${pythonExecutable} ${scriptPath} ${imagePath}`);
-    console.log(`Working directory: ${catprinterDir}`);
-
     const pythonProcess = spawn(pythonExecutable, [scriptPath, imagePath], {
       cwd: catprinterDir,
       stdio: 'inherit',
@@ -18,9 +15,8 @@ async function printImage(imageName, imagePath) {
     });
 
     pythonProcess.on('close', (code) => {
-      console.log(`Python process exited with code ${code}`);
       if (code === 0) {
-        resolve(`Printed ${imageName} successfully`);
+        resolve(`🖨️ Printed ${imageName} successfully`);
       } else {
         reject(new Error(`Printing failed with code ${code}`));
       }

@@ -51,11 +51,11 @@ async function processPrintQueue() {
   const { name, path: imagePath } = printQueue.shift();
 
   try {
-    console.log(`Procesando el trabajo de impresión para ${name}`);
+    console.log(`🖨️ Procesando el trabajo de impresión para ${name}`);
     await printService.printImage(name, imagePath);
-    console.log(`Terminada la impresión de ${name}`);
+    console.log(`✅ Terminada la impresión de ${name}`);
   } catch (error) {
-    console.error(`Error al imprimir ${name}:`, error);
+    console.error(`🆘 Error al imprimir ${name}:`, error);
   } finally {
     // Process the next in the queue
     processPrintQueue();
