@@ -12,8 +12,10 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 8080;
 
-console.log("⏱️ Scheduled the printer keep-awake process..."); // Log adicional
-scheduleKeepAwake();
+if (process.argv.includes('--keep-awake')) {
+  console.log("⏱️ Scheduled the printer keep-awake process...");
+  scheduleKeepAwake();
+}
 
 app.use('/', indexRoutes);
 app.use('/health-check', healthCheckRoutes);
