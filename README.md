@@ -1,123 +1,96 @@
 # Catprinter Manager
 
-Este repositorio gestiona el envío de imágenes a una impresora utilizando el submódulo `catprinter`. La aplicación permite cargar imágenes, añadirlas a una cola de impresión y enviarlas a la impresora.
+A comprehensive printer management application for sending images to a thermal printer using the `catprinter` submodule, with added keep-awake functionality.
 
-## Requisitos
+## Key Features
 
-Asegúrate de tener los siguientes elementos instalados en tu sistema:
+- Image queue management
+- Bluetooth printer interaction
+- Automatic keep-awake mechanism to prevent printer sleep mode
+- Flexible image processing
 
-- **Node.js** (versión 18)
-- **Python** (versión 3.11.0)
-- **Dependencias de Python** requeridas por el submódulo `catprinter`
-- **Bluetooth habilitado** para interactuar con la impresora.
+## System Requirements
 
-## Instalación
+- **Node.js** (v18+)
+- **Python** (v3.11.0)
+- `catprinter` **submodule dependencies**
+- **Bluetooth enabled device**
 
-### 1. Clonar el repositorio
+## Installation
 
-Primero, clona este repositorio y asegúrate de inicializar el submódulo de `catprinter`.
+### 1. Clone Repository
 
 ```bash
 git clone --recurse-submodules https://github.com/sofiaferro/catprinter-manager.git
-```
-Si ya has clonado el repositorio sin el submódulo, puedes inicializarlo manualmente con:
-
-```bash
-git submodule init
-git submodule update
+cd catprinter-manager
 ```
 
-### 2. Instalar dependencias de Node.js
-Dirígete al directorio del proyecto y ejecuta el siguiente comando para instalar las dependencias de Node.js:
+### 2. Setup Dependencies
 
 ```bash
+# Install Node.js dependencies
 npm install
-```
-### 3. Configurar y activar el entorno virtual de Python
 
-El submódulo `catprinter` requiere un entorno virtual para gestionar las dependencias de Python. Navega al directorio child, crea un entorno virtual y actívalo:
-
-```bash
+# Setup Python virtual environment
 cd child
 python3 -m venv venv
-source venv/bin/activate  # Para Linux/MacOS
-```
-Para usuarios de Windows, usa:
+source venv/bin/activate  # Linux/MacOS
+# venv\Scripts\activate.bat  # Windows
 
-```bash
-venv\Scripts\activate.bat
-```
-
-### 4. Instala las dependencias de Python 
-Con el entorno virtual activado, instala las dependencias necesarias:
-
-bash
-Copiar código
-```bash
+# Install Python dependencies
 pip install -r requirements.txt
 ```
 
-### 4. Configuración del puerto de la impresora (si es necesario)
-Asegúrate de tener la impresora conectada a tu sistema y configura el puerto que utilizará para la conexión Bluetooth, si es necesario. Esto puede hacerse modificando los parámetros en el código del submódulo o pasando configuraciones a través de variables de entorno.
+### 3. Printer Configuration
 
-### 5. Ejecutar la aplicación
-Para ejecutar la aplicación, simplemente corre el siguiente comando:
+Ensure Bluetooth is configured and the printer is connected.
+
+#### Running the Application
 
 ```bash
 npm start
 ```
-Este comando ejecutará la aplicación Express en el puerto configurado (por defecto, será localhost:8080).
 
-### 6. Subir una imagen
-Para subir una imagen a la cola de impresión, realiza una solicitud POST al endpoint /print con una imagen en el cuerpo de la solicitud.
+The application runs on `localhost:8080` by default.
 
-Ejemplo de uso con curl:
+#### Keep-Awake Functionality
 
-```bash
-curl -X POST -F "image=@/ruta/a/tu/imagen.png" http://localhost:8080/print
-```
-## Detalles sobre el submódulo catprinter
-El submódulo catprinter contiene los scripts de Python que interactúan directamente con la impresora. Estos scripts son responsables de manejar la conexión Bluetooth con la impresora y de aplicar efectos de dithering en las imágenes antes de enviarlas para impresión.
-
-
-### Submódulo catprinter
-El submódulo se encuentra en el directorio `/child`. Puedes acceder a su repositorio original en `https://github.com/rbaron/catprinter`. Asegúrate de mantenerlo actualizado y sincronizado con el resto del proyecto ejecutando el siguiente comando:
+The manager includes an optional keep-awake mechanism to prevent printer sleep mode:
 
 ```bash
-git submodule update --remote
+# Run with keep-awake enabled
+node server.js --keep-awake
 ```
-Esto descargará cualquier cambio nuevo realizado en el submódulo desde su repositorio original.
 
-## Estructura del Proyecto
+When enabled, the application sends periodic dummy commands to maintain printer activity.
+
+### 4. Image Upload 
+
+Upload images via POST request:
+
+```bash
+curl -X POST -F "image=@/path/to/image.png" http://localhost:8080/print
+```
+
+
+## Project Structure
 ```plaintext
-catprinter-Manager/
+catprinter-manager/
 │
-├── child/                # Submódulo `catprinter` con los scripts de Python
-│   ├── catprinter/       # Archivos de `catprinter`
-│   ├── media/            # Archivos multimedia
-│   ├── temp/             # Archivos temporales de impresión
-│   ├── print.py          # Script principal de impresión
-│   ├── requirements.txt  # Dependencias de Python
-│   ├── setup.cfg         # Configuración para el entorno de Python
-│
-├── routes/               # Archivos de rutas de la aplicación Express
-│   ├── healthCheck.js    # Endpoint de verificación del servicio
-│   ├── index.js          # Ruta principal
-│   ├── print.js          # Ruta para manejar las solicitudes de impresión
-│
-├── services/             # Lógica de negocio
-│   ├── printService.js   # Servicio de impresión
-│
-├── .env                  # Variables de entorno
-├── .gitignore            # Archivos y carpetas ignoradas por Git
-├── .gitmodules           # Configuración de submódulos de Git
-├── package.json          # Dependencias de Node.js
-├── package-lock.json     # Bloqueo de versiones de Node.js
-├── server.js             # Configuración y arranque del servidor
-└── README.md             # Este archivo
+├── child/                # Catprinter submodule
+├── routes/               # Express route handlers
+├── services/             # Business logic
+│   └── scheduleKeepAwake.js  # Keep-awake service
+├── server.js             # Server configuration
+└── README.md
 ```
-## Contribuir
-Si deseas contribuir a este proyecto, por favor realiza un fork del repositorio, realiza los cambios deseados y crea un pull request. Asegúrate de seguir el flujo de trabajo de Git para mantener la integridad del código.
 
-## Licencia
-Este proyecto está bajo la Licencia MIT - consulta el archivo LICENSE para más detalles.
+## Contribuir
+1. Fork the repository
+2. Create your feature branch
+3. Commit changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+MIT License
